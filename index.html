@@ -2,78 +2,129 @@
 <html lang="te">
 <head>
   <meta charset="UTF-8">
-  <title>Unicode → Anu Font Converter</title>
+  <title>తెలుగు యూనికోడ్ → అనుఫాంట్ మార్పిడి</title>
   <style>
-    body { font-family: 'Noto Sans Telugu', sans-serif; padding: 20px; max-width: 900px; margin: auto; background-color: #fdf8ef; }
-    textarea { width: 100%; height: 150px; font-size: 18px; padding: 10px; margin: 10px 0; }
-    button, select { padding: 10px 20px; font-size: 16px; margin: 5px; }
-    h1 { color: #5d2c00; }
+    body {
+      font-family: 'Noto Sans Telugu', sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #610000;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      background-color: #610000;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #910000;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      margin-top: 20px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 14px;
+      color: gray;
+    }
   </style>
 </head>
 <body>
+  <h1>తెలుగు యూనికోడ్ → అనుఫాంట్ మార్పిడి</h1>
 
-<h1>🔤 Unicode to Anu Telugu Font Converter</h1>
+  <label for="unicodeInput">యూనికోడ్ తెలుగు వచనం:</label>
+  <textarea id="unicodeInput" placeholder="ఇక్కడ యూనికోడ్ వచనం టైప్ చేయండి..."></textarea>
 
-<select id="fontSelect">
-  <option value="anu" selected>Anu 6.0</option>
-  <option value="anu7">Anu 7.0</option>
-</select>
+  <button onclick="convert()">మార్చు</button>
+  <button onclick="copyOutput()">కాపీ</button>
+  <button onclick="clearText()">క్లీర్</button>
 
-<br/>
-<textarea id="inputText" placeholder="Type or paste Unicode Telugu text here..."></textarea>
-<textarea id="outputText" placeholder="Anu font encoded text will appear here..." readonly></textarea>
+  <label for="anuOutput">అనుఫాంట్ ఫలితం:</label>
+  <textarea id="anuOutput" readonly placeholder="ఇక్కడ అనుఫాంట్ ఫలితం కనిపిస్తుంది..."></textarea>
 
-<br/>
-<button onclick="convert()">🔄 Convert</button>
-<button onclick="copyOutput()">📋 Copy Output</button>
+  <footer>
+    © 2025 Telugu2Anu Project | <a href="https://github.com/YOUR_USERNAME/telugu-unicode-to-anu" target="_blank">GitHub</a>
+  </footer>
 
-<script>
-function smarten(text) {
-  return text
-    .replace(/(^|[-\u2014\s(\["])'/g, "$1\u2018")
-    .replace(/'/g, "\u2019")
-    .replace(/(^|[-\u2014/\[(\u2018\s])"/g, "$1\u201c")
-    .replace(/"/g, "\u201d")
-    .replace(/--/g, "\u2014");
-}
+  <script>
+const unicodeToAnuMap = {
+  // Vowels
+  "అ": "A1", "ఆ": "A2", "ఇ": "A3", "ఈ": "A4",
+  "ఉ": "A5", "ఊ": "A6", "ఋ": "A7", "ఎ": "A8",
+  "ఏ": "A9", "ఐ": "A10", "ఒ": "A11", "ఓ": "A12", "ఔ": "A13",
 
-function convert() {
-  const font = document.getElementById('fontSelect').value;
-  const input = document.getElementById('inputText').value.trim();
+  // Consonants
+  "క": "A14", "ఖ": "A15", "గ": "A16", "ఘ": "A17", "ఙ": "A18",
+  "చ": "A19", "ఛ": "A20", "జ": "A21", "ఝ": "A22", "ఞ": "A23",
+  "ట": "A24", "ఠ": "A25", "డ": "A26", "ఢ": "A27", "ణ": "A28",
+  "త": "A29", "థ": "A30", "ద": "A31", "ధ": "A32", "న": "A33",
+  "ప": "A34", "ఫ": "A35", "బ": "A36", "భ": "A37", "మ": "A38",
+  "య": "A39", "ర": "A40", "ల": "A41", "వ": "A42", "శ": "A43",
+  "ష": "A44", "స": "A45", "హ": "A46", "ళ": "A47", "క్ష": "A48", "ఱ": "A49",
 
-  if (!input) {
-    alert("Please enter some Unicode Telugu text.");
-    return;
-  }
+  // Guninthalu (Vowel signs)
+  "ా": "G1", "ి": "G2", "ీ": "G3", "ు": "G4", "ూ": "G5",
+  "ె": "G6", "ే": "G7", "ై": "G8", "ొ": "G9", "ో": "G10", "ౌ": "G11",
+  "ృ": "G12",
 
-  const url = "https://eemaata.com/font2unicode/Encoder/unicode2font.php5";
-  const data = new URLSearchParams({
-    transformToUnicode: 1,
-    font: font,
-    posTextIn: smarten(input)
-  });
+  // Vattulu (Consonant+virama)
+  "్క": "V1", "్ఖ": "V2", "్గ": "V3", "్ఘ": "V4", "్ఙ": "V5",
+  "్చ": "V6", "్ఛ": "V7", "్జ": "V8", "్ఝ": "V9", "్ఞ": "V10",
+  "్ట": "V11", "్ఠ": "V12", "్డ": "V13", "్ఢ": "V14", "్ణ": "V15",
+  "్త": "V16", "్థ": "V17", "్ద": "V18", "్ధ": "V19", "్న": "V20",
+  "్ప": "V21", "్ఫ": "V22", "్బ": "V23", "్భ": "V24", "్మ": "V25",
+  "్య": "V26", "్ర": "V27", "్ల": "V28", "్వ": "V29", "్శ": "V30",
+  "్ష": "V31", "్స": "V32", "్హ": "V33", "్ళ": "V34", "్క్ష": "V35", "్ఱ": "V36",
 
-  fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: data.toString()
-  })
-  .then(response => response.text())
-  .then(text => {
-    document.getElementById("outputText").value = text;
-  })
-  .catch(error => {
-    alert("Error converting text: " + error);
-  });
-}
-
-function copyOutput() {
-  const text = document.getElementById("outputText").value;
-  navigator.clipboard.writeText(text)
-    .then(() => alert("Copied to clipboard!"))
-    .catch(() => alert("Failed to copy."));
-}
+  // Other Symbols
+  "ం": "S1", // Anusvara
+  "ః": "S2", // Visarga
+  "ँ": "S3", // Chandrabindu
+  "్": "S4"  // Virama
+};
 </script>
 
+    function convert() {
+      const input = document.getElementById("unicodeInput").value;
+      let output = "";
+
+      for (let char of input) {
+        output += unicodeToAnuMap[char] || char;
+      }
+
+      document.getElementById("anuOutput").value = output;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById("anuOutput");
+      output.select();
+      document.execCommand("copy");
+      alert("ఫలితాన్ని కాపీ చేసారు!");
+    }
+
+    function clearText() {
+      document.getElementById("unicodeInput").value = "";
+      document.getElementById("anuOutput").value = "";
+    }
+  </script>
 </body>
 </html>
