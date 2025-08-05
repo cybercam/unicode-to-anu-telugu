@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unicode to Telugu (Anu) Font Converter</title>
+  <style>
+    body {
+      font-family: 'Noto Sans Telugu', sans-serif;
+      background-color: #f5f5ff;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4b0082;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      font-size: 18px;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      background-color: #6a0dad;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #4b0082;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Unicode ➡️ Telugu Anu Font Converter</h1>
+
+  <label for="inputText">✍️ Unicode Telugu Text:</label>
+  <textarea id="inputText" placeholder="ఉదాహరణ: శుభోదయం..."></textarea>
+
+  <div class="button-row">
+    <button onclick="convertText()">🔄 Convert</button>
+    <button onclick="clearText()">🧹 Clear</button>
+    <button onclick="copyText()">📋 Copy</button>
+    <button onclick="saveText()">💾 Save</button>
+  </div>
+
+  <label for="outputText">📄 Converted Anu Font Text:</label>
+  <textarea id="outputText" readonly placeholder="ఇక్కడ Anu ఫాంట్ లో టెక్స్ట్ కనిపిస్తుంది..."></textarea>
+
+  <footer>
+    Developed with ❤️ for Telugu Script • Free and Open Source on GitHub
+  </footer>
+
+  <script>
+    const unicodeToAnu = {
+      "అ": "¬", "ఆ": "«", "ఇ": "®", "ఈ": "¯", "ఉ": "°", "ఊ": "±", "ఋ": "²", 
+      "ఎ": "³", "ఏ": "´", "ఐ": "µ", "ఒ": "¶", "ఓ": "·", "ఔ": "¸",
+      "క": "¹", "ఖ": "º", "గ": "»", "ఘ": "¼", "ఙ": "½", "చ": "¾", "ఛ": "¿",
+      "జ": "À", "ఝ": "Á", "ఞ": "Â", "ట": "Ã", "ఠ": "Ä", "డ": "Å", "ఢ": "Æ",
+      "ణ": "Ç", "త": "È", "థ": "É", "ద": "Ê", "ధ": "Ë", "న": "Ì", "ప": "Í",
+      "ఫ": "Î", "బ": "Ï", "భ": "Ð", "మ": "Ñ", "య": "Ò", "ర": "Ó", "ల": "Ô",
+      "వ": "Õ", "శ": "Ö", "ష": "×", "స": "Ø", "హ": "Ù", "ళ": "Ú", "క్ష": "Û",
+      "ఱ": "Ü", "ం": "Ý", "ః": "Þ", "ఁ": "ß", "ా": "à", "ి": "á", "ీ": "â",
+      "ు": "ã", "ూ": "ä", "ె": "å", "ే": "æ", "ై": "ç", "ొ": "è", "ో": "é", "ౌ": "ê"
+    };
+
+    function convertText() {
+      const input = document.getElementById("inputText").value;
+      let output = "";
+      for (let ch of input) {
+        output += unicodeToAnu[ch] || ch;
+      }
+      document.getElementById("outputText").value = output;
+    }
+
+    function clearText() {
+      document.getElementById("inputText").value = "";
+      document.getElementById("outputText").value = "";
+    }
+
+    function copyText() {
+      const text = document.getElementById("outputText").value;
+      navigator.clipboard.writeText(text)
+        .then(() => alert("Copied to clipboard!"))
+        .catch(err => alert("Error: " + err));
+    }
+
+    function saveText() {
+      const text = document.getElementById("outputText").value;
+      const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+      const link = document.createElement("a");
+      link.download = "converted_anu_text.txt";
+      link.href = URL.createObjectURL(blob);
+      link.click();
+    }
+  </script>
+</body>
+</html>
