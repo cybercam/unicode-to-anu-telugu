@@ -1,130 +1,201 @@
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <title>తెలుగు యూనికోడ్ → అనుఫాంట్ మార్పిడి</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unicode to NonUnicode - Telugu</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     body {
-      font-family: 'Noto Sans Telugu', sans-serif;
-      background-color: #f7f7f7;
-      color: #333;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      color: #610000;
+      font-family: 'Segoe UI', sans-serif;
     }
     textarea {
-      width: 100%;
-      height: 150px;
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-    button {
-      font-size: 16px;
-      padding: 10px 15px;
-      margin: 5px;
-      border: none;
-      background-color: #610000;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #910000;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-      margin-top: 20px;
-    }
-    footer {
-      text-align: center;
-      margin-top: 30px;
-      font-size: 14px;
-      color: gray;
+      resize: vertical;
     }
   </style>
 </head>
-<body>
-  <h1>తెలుగు యూనికోడ్ → అనుఫాంట్ మార్పిడి</h1>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen transition-colors duration-200">
 
-  <label for="unicodeInput">యూనికోడ్ తెలుగు వచనం:</label>
-  <textarea id="unicodeInput" placeholder="ఇక్కడ యూనికోడ్ వచనం టైప్ చేయండి..."></textarea>
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    <header class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">Unicode to NonUnicode</h1>
+      <p class="text-gray-600 dark:text-gray-300 mt-2">Telugu Text Converter (Ra-Type 01/02)</p>
+    </header>
 
-  <button onclick="convert()">మార్చు</button>
-  <button onclick="copyOutput()">కాపీ</button>
-  <button onclick="clearText()">క్లీర్</button>
+    <!-- Theme Toggle -->
+    <div class="flex justify-end mb-4">
+      <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-yellow-300 hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
 
-  <label for="anuOutput">అనుఫాంట్ ఫలితం:</label>
-  <textarea id="anuOutput" readonly placeholder="ఇక్కడ అనుఫాంట్ ఫలితం కనిపిస్తుంది..."></textarea>
+    <!-- Input Section -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+      <label for="input" class="block text-sm font-medium mb-2">Unicode Telugu Input</label>
+      <textarea id="input" rows="6" class="w-full border border-gray-300 dark:border-gray-600 rounded-md p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100" placeholder="పేస్ట్ చేయండి లేదా టైప్ చేయండి..."></textarea>
+      <div id="char-count" class="text-sm text-gray-500 dark:text-gray-400 mt-1">Characters (excluding spaces): 0 / 3000</div>
+    </div>
 
-  <footer>
-    © 2025 Telugu2Anu Project | <a href="https://github.com/YOUR_USERNAME/telugu-unicode-to-anu" target="_blank">GitHub</a>
+    <!-- Options -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 space-y-4">
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" id="toggle-space" checked class="form-checkbox h-4 w-4 text-indigo-600 rounded focus:ring-indigo-500">
+        <span class="text-sm">Replace spaces with non-breaking space (for Anu fonts)</span>
+      </label>
+
+      <div>
+        <span class="text-sm font-medium">Select Mapping:</span>
+        <label class="ml-4">
+          <input type="radio" name="mapping" value="raType1" checked>
+          <span class="text-sm ml-1">Ra-Type 01</span>
+        </label>
+        <label class="ml-4">
+          <input type="radio" name="mapping" value="raType2">
+          <span class="text-sm ml-1">Ra-Type 02</span>
+        </label>
+      </div>
+
+      <label class="flex items-center space-x-2">
+        <input type="checkbox" id="auto-copy" checked class="form-checkbox h-4 w-4 text-indigo-600 rounded focus:ring-indigo-500">
+        <span class="text-sm">Auto-copy result to clipboard</span>
+      </label>
+    </div>
+
+    <!-- Convert Button -->
+    <div class="text-center mb-6">
+      <button id="convert-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg shadow transition focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        🔁 Convert & Copy
+      </button>
+    </div>
+
+    <!-- Output -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+      <label for="output" class="block text-sm font-medium mb-2">NonUnicode Output (AnuFont Ready)</label>
+      <textarea id="output" rows="6" class="w-full border border-gray-300 dark:border-gray-600 rounded-md p-3 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-100" readonly placeholder="ఇక్కడ ఫలితం కనిపిస్తుంది..."></textarea>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="mt-8 text-xs text-gray-500 dark:text-gray-400 bg-yellow-50 dark:bg-gray-800 p-3 rounded border border-yellow-200 dark:border-gray-700">
+      <strong>Disclaimer:</strong> This tool converts Unicode Telugu to NonUnicode (AnuFont-style) using client-side logic. You must have AnuFont or similar installed to view the output correctly. Not affiliated with AnuFonts. Use at your own risk.
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center text-sm text-gray-500 dark:text-gray-400 py-6 mt-10 border-t border-gray-200 dark:border-gray-800">
+    © 2025 <strong>Telugu Unicode Converter</strong> | Hosted on GitHub
   </footer>
 
   <script>
-const unicodeToAnuMap = {
-  // Vowels
-  "అ": "A1", "ఆ": "A2", "ఇ": "A3", "ఈ": "A4",
-  "ఉ": "A5", "ఊ": "A6", "ఋ": "A7", "ఎ": "A8",
-  "ఏ": "A9", "ఐ": "A10", "ఒ": "A11", "ఓ": "A12", "ఔ": "A13",
+    // Simple mapping for common Telugu characters (Ra-Type 01 example)
+    const mappingA = {
+      'అ': 'a', 'ఆ': 'A', 'ఇ': 'i', 'ఈ': 'I', 'ఉ': 'u', 'ఊ': 'U', 'ఋ': 'Ru',
+      'ఎ': 'e', 'ఏ': 'E', 'ఐ': 'y', 'ఒ': 'o', 'ఓ': 'O', 'ఔ': 'au',
+      'క': 'k', 'ఖ': 'K', 'గ': 'g', 'ఘ': 'G', 'ఙ': 'ng',
+      'చ': 'c', 'ఛ': 'C', 'జ': 'j', 'ఝ': 'J', 'ఞ': 'nj',
+      'ట': 'T', 'ఠ': 'T', 'డ': 'D', 'ఢ': 'D', 'ణ': 'N',
+      'త': 't', 'థ': 't', 'ద': 'd', 'ధ': 'd', 'న': 'n',
+      'ప': 'p', 'ఫ': 'p', 'బ': 'b', 'భ': 'b', 'మ': 'm',
+      'య': 'y', 'ర': 'r', 'ల': 'l', 'వ': 'v', 'శ': 'S', 'ష': 'z', 'స': 's', 'హ': 'h',
+      'ళ': 'L', 'క్ష': 'Kz', 'జ్ఞ': 'Gy',
+      ' ': '\u00A0' // Non-breaking space
+    };
 
-  // Consonants
-  "క": "A14", "ఖ": "A15", "గ": "A16", "ఘ": "A17", "ఙ": "A18",
-  "చ": "A19", "ఛ": "A20", "జ": "A21", "ఝ": "A22", "ఞ": "A23",
-  "ట": "A24", "ఠ": "A25", "డ": "A26", "ఢ": "A27", "ణ": "A28",
-  "త": "A29", "థ": "A30", "ద": "A31", "ధ": "A32", "న": "A33",
-  "ప": "A34", "ఫ": "A35", "బ": "A36", "భ": "A37", "మ": "A38",
-  "య": "A39", "ర": "A40", "ల": "A41", "వ": "A42", "శ": "A43",
-  "ష": "A44", "స": "A45", "హ": "A46", "ళ": "A47", "క్ష": "A48", "ఱ": "A49",
+    // Ra-Type 02 (example variation)
+    const mappingB = { ...mappingA, 'ర': 'R', 'ర్': 'x' };
 
-  // Guninthalu (Vowel signs)
-  "ా": "G1", "ి": "G2", "ీ": "G3", "ు": "G4", "ూ": "G5",
-  "ె": "G6", "ే": "G7", "ై": "G8", "ొ": "G9", "ో": "G10", "ౌ": "G11",
-  "ృ": "G12",
+    // DOM Elements
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    const charCount = document.getElementById('char-count');
+    const convertBtn = document.getElementById('convert-btn');
+    const toggleSpace = document.getElementById('toggle-space');
+    const autoCopy = document.getElementById('auto-copy');
+    const themeToggle = document.getElementById('theme-toggle');
 
-  // Vattulu (Consonant+virama)
-  "్క": "V1", "్ఖ": "V2", "్గ": "V3", "్ఘ": "V4", "్ఙ": "V5",
-  "్చ": "V6", "్ఛ": "V7", "్జ": "V8", "్ఝ": "V9", "్ఞ": "V10",
-  "్ట": "V11", "్ఠ": "V12", "్డ": "V13", "్ఢ": "V14", "్ణ": "V15",
-  "్త": "V16", "్థ": "V17", "్ద": "V18", "్ధ": "V19", "్న": "V20",
-  "్ప": "V21", "్ఫ": "V22", "్బ": "V23", "్భ": "V24", "్మ": "V25",
-  "్య": "V26", "్ర": "V27", "్ల": "V28", "్వ": "V29", "్శ": "V30",
-  "్ష": "V31", "్స": "V32", "్హ": "V33", "్ళ": "V34", "్క్ష": "V35", "్ఱ": "V36",
+    // Update character count
+    function updateCount() {
+      const text = input.value;
+      const count = text.replace(/\s/g, '').length;
+      charCount.textContent = `Characters (excluding spaces): ${count} / 3000`;
+      charCount.className = count > 3000 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400';
+    }
 
-  // Other Symbols
-  "ం": "S1", // Anusvara
-  "ః": "S2", // Visarga
-  "ँ": "S3", // Chandrabindu
-  "్": "S4"  // Virama
-};
+    // Convert function
+    function convertText() {
+      const text = input.value;
+      const useMappingA = document.querySelector("input[name='mapping']:checked").value === 'raType1';
+      const map = useMappingA ? mappingA : mappingB;
+      let result = '';
 
-
-    function convert() {
-      const input = document.getElementById("unicodeInput").value;
-      let output = "";
-
-      for (let char of input) {
-        output += unicodeToAnuMap[char] || char;
+      let i = 0;
+      while (i < text.length) {
+        // Handle 'ర్' specially if needed
+        if (text[i] === 'ర' && i + 1 < text.length && text[i + 1] === '్') {
+          result += map['ర్'] || 'R';
+          i += 2;
+        } else {
+          const char = text[i];
+          result += map[char] || char;
+          i++;
+        }
       }
 
-      document.getElementById("anuOutput").value = output;
+      // Replace normal spaces with non-breaking space if checked
+      if (toggleSpace.checked) {
+        result = result.replace(/ /g, '\u00A0');
+      }
+
+      output.value = result;
+
+      // Auto-copy
+      if (autoCopy.checked) {
+        navigator.clipboard.writeText(result).then(() => {
+          showToast("✅ Converted & copied!");
+        }).catch(() => {
+          showToast("✅ Converted (copy failed)");
+        });
+      } else {
+        showToast("✅ Converted!");
+      }
     }
 
-    function copyOutput() {
-      const output = document.getElementById("anuOutput");
-      output.select();
-      document.execCommand("copy");
-      alert("ఫలితాన్ని కాపీ చేసారు!");
+    // Show toast
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.textContent = msg;
+      toast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 px-4 py-2 rounded-md shadow-lg text-sm z-50 transition-opacity duration-300';
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.remove(); }, 2500);
     }
 
-    function clearText() {
-      document.getElementById("unicodeInput").value = "";
-      document.getElementById("anuOutput").value = "";
+    // Event Listeners
+    input.addEventListener('input', updateCount);
+    convertBtn.addEventListener('click', convertText);
+
+    // Theme toggle
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    if (savedTheme === 'dark' || !savedTheme) {
+      document.documentElement.classList.add('dark');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+      themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
     }
+
+    // Initialize
+    updateCount();
   </script>
 </body>
 </html>
